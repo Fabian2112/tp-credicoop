@@ -1,6 +1,8 @@
 version: '3.8'
 
+# se usan 2 servicios, sonarqube y jenkins
 services:
+
   sonarqube:
     image: sonarqube:community
     container_name: sonarqube
@@ -8,22 +10,31 @@ services:
       - "9000:9000"
     volumes:
       - sonarqube_data:/opt/sonarqube/sonarqube_data
-      - sonarqube_extension:/opt/sonarqube/extension
+      - sonarqube_extensions:/opt/sonarqube/extensions
       - sonarqube_logs:/opt/sonarqube/logs
       - sonarqube_temp:/opt/sonarqube/temp
     restart: unless-stopped
 
   jenkins:
+    # le digo a jenkins que vaya a buscar la imagen a mi repo de docker-hub
     image: fabian2112/fabian2112-repo:jenkins-latest
+    # defino nombre de contenedor
     container_name: jenkins
+    # se definen 2 puertos, uno para web y otro para comunicacion interna
     ports:
-      - "8080:8080"
+      - "8080:8080" 
       - "50000:50000"
+    # los storage que vamos a persistir
     volumes:
-      - jenskins home:/var/jenkins home
+      - jenkins home:/var/jenkins home
+    # la dependencia de sonarqube que viene por enunciado
     depends_on:
       - sonarqube
     restart: on-failure
   
 volumes:
-  - 
+  jenkins_home:
+  sonarqube_data:
+  sonarqube_extensions:
+  sonarqube_logs:
+  sonarqube_temp:
