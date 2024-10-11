@@ -1,0 +1,11 @@
+# buildear la imagen de docker
+docker build -t jenkins:latest .
+
+# etiquetar la imagen de docker
+docker tag jenkins:latest fabian2112/fabian2112-repo:jenkins-latest
+
+# pushear la imagen a docker-hub
+docker push fabian2112/fabian2112-repo:jenkins-latest
+
+# remover la imagen localmente para guardar espacio despues del push
+docker rmi fabian2112/fabian2112-repo:jenkins-latest
