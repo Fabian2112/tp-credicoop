@@ -50,7 +50,7 @@ RUN apt-get update \
 # se instala Node.js 18.x y alguna herramientas npm adicionales
 RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
     && apt-get install -y nodejs \
-    && npm install -g pnp@8.15.7 turbo@1.13.3
+    && npm install -g pnp@0.0.3 turbo@1.13.3
 
 # se instala kubectl
 RUN curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl" \
