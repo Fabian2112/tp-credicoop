@@ -26,7 +26,7 @@ services:
       - "50000:50000"
     # los storage que vamos a persistir
     volumes:
-      - jenkins home:/var/jenkins home
+      - jenkins_home:/var/jenkins_home
     # la dependencia de sonarqube que viene por enunciado
     depends_on:
       - sonarqube
