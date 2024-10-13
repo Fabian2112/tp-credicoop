@@ -1,0 +1,36 @@
+---
+- name: Deploy LimeSurvey on Minikube
+  hosts: minikube
+  become: yes
+  tasks:
+    - name: Install Docker if not installed
+      yum:
+        name: docker
+        state: present
+
+    - name: Install Docker Compose if not installed
+      get_url:
+        url: "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)"
+        dest: /usr/local/bin/docker-compose
+        mode: '0755'
+
+    - name: Start Docker service
+      service:
+        name: docker
+        state: started
+        enabled: yes
+
+    - name: Create Docker Compose directory
+      file:
+        path: /opt/limesurvey
+        state: directory
+
+    - name: Copy docker-compose.yml to the target server
+      copy:
+        src: docker-compose.yml
+        dest: /opt/limesurvey/docker-compose.yml
+
+    - name: Start LimeSurvey container
+      command: docker-compose up -d
+      args:
+        chdir: /opt/limesurvey

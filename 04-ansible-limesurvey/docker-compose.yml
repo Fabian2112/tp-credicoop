@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  limesurvey:
+    image: limesurvey/limesurvey
+    restart: always
+    ports:
+      - "8080:80"
+    environment:
+      - MYSQL_ROOT_PASSWORD=rootpassword
+      - MYSQL_DATABASE=limesurvey
+      - MYSQL_USER=user
+      - MYSQL_PASSWORD=userpassword
