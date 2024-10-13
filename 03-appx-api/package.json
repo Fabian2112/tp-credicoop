@@ -1,1 +1,16 @@
-{}
+{
+    "name": "appx-api",
+    "version": "1.0.0",
+    "description": "API for appx",
+    "main": "app.js",
+    "scripts": {
+        "start": "node app.js",
+        "test": "echo \"Error: no test specified\" && exit 0"
+    },
+    "dependencies": {
+        "appx-api": "file:",
+        "express": "^4.17.1",
+        "mongoose": "^5.9.1",
+        "mysql2": "^2.3.3"
+    }
+}
