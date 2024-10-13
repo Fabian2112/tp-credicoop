@@ -1,0 +1,84 @@
+pipeline {
+    agent any
+
+    environment {
+        WOKR_DIR = "/var/jenkins_home/${BUILD_ID}"
+        MINIKUBE_WORK_DIR = "/home/fabian2112"
+    }
+
+    stages {
+        stage('Checkout'){
+            steps {
+                echo 'Cheking out SCM Jobs Project'
+                dir("${WORKD_DIR}") {
+                    git branch: "main",
+                        credentialsId: '3bb5dde3-75a9-443d-a43c-a875df63cc92',
+                        url: 'https://github.com/Fabian2112/tp-credicoop.git'
+                }
+            }
+        }
+
+        stage('SonarQube Analysis'){
+            steps {
+                script {
+                    def scannerHome = tool 'sonar_scanner-6.2';
+                    withSonarQubeEnv('SonarQube'){
+                        sh """
+                        ${ScannerHome}/bin/sonar-scanner \
+                        -Dsonar.projectKey=Fabian2112_tp-credicoop_91001045-3902-438c-8850-bf494205e03e
+                        -Dsonar.sources=${WORK_DIR}/03-appx-api
+                        -Dsonar.projectBaseDir=${WORK_DIR}/03-appx-api
+                        """
+                    }
+                }
+            }
+        }
+
+        stage('Checkout remoto') {
+            agent {
+                label 'minikube'
+            }
+            steps {
+                script {
+                    echo 'Checking out SCM Jobs Project'
+                        git branch: "main"
+                            credentialsId: '3bb5dde3-75a9-443d-a43c-a875df63cc92',
+                            url: 'https://github.com/Fabian2112/tp-credicoop.git'
+                }
+            }
+        }
+
+        stage('Docker Build') {
+            agent { label 'minikube'}
+            steps {
+                echo 'Building Docker Image'
+                dir("${env.WORKSPACE}/03-appx-api") {
+                    sh 'ls -l'
+                    sh 'docker build -t appx-api:latest .'
+                }
+            }
+        }
+
+        stage('Docker Push') {
+            agent { label 'minikube'}
+            steps {
+                echo 'Pushing Docker Image'
+                sh '''
+                docker tag appx-api:latest fabian2112/fabian2112-repo:appx-api-latest
+                docker push fabian2112/fabian2112-repo:appx-api-latest
+                '''
+            }
+        }
+
+        stage('Restart Deployment') {
+            agent {label 'minikube'}
+            steps {
+                sh '''
+                alias kubectl="minikube kubectl --"
+                kubectl rollout restart deployment appx-api-deployment
+                '''
+            }
+
+        }
+    }
+}
