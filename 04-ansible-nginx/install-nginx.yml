@@ -1,0 +1,32 @@
+---
+- name: Deploy Node.js Application
+  hosts: app_servers
+  become: yes
+  tasks:
+    - name: Asegurarse de que Node.js esté instalado
+      apt:
+        name: nodejs
+        state: present
+      when: ansible_os_family == "Debian"
+
+    - name: Asegurarse de que npm esté instalado
+      apt:
+        name: npm
+        state: present
+      when: ansible_os_family == "Debian"
+
+    - name: Instalar dependencias de la aplicación
+      npm:
+        path: /03-appx-api
+        state: present
+
+    - name: Iniciar la aplicación
+      command: node /03-appx-api/app.js
+      async: 10
+      poll: 0
+
+    - name: Asegurarse de que la aplicación esté corriendo
+      wait_for:
+        port: 3000
+        delay: 10
+        timeout: 60

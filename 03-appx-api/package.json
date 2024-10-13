@@ -10,7 +10,6 @@
     "dependencies": {
         "appx-api": "file:",
         "express": "^4.17.1",
-        "mongoose": "^5.9.1",
-        "mysql2": "^2.3.3"
+        "mongoose": "^5.9.1"
     }
 }
