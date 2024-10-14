@@ -4,26 +4,26 @@ metadata:
   name: nodejs-app
   labels:
     app: appx-api
-  spec:
-    replicas: 2   # le digo cantidad de instancias
-    selector:
-      matchLabels:
+spec:
+  replicas: 3   # le digo cantidad de instancias
+  selector:
+    matchLabels:
+      app: nodejs-app
+  template:
+    metadata:
+      labels:
         app: nodejs-app
-    template:
-      metadata:
-        labels:
-          app: nodejs-app
-      spec:
-        containers:
-        - name: nodejs-app
-          image: fabian2112/fabian2112-repo:nodejs-app:1.0 # le paso la imagen de mi repo
-          ports:
-          - containerPort: 3000
+    spec:
+      containers:
+      - name: nodejs-app
+        image: fabian2112/fabian2112-repo:nodejs-app:1.0 # le paso la imagen de mi repo
+        ports:
+        - containerPort: 3000
 
 ---
 
 # en esta parte de servicios es donde al cluster cerrado le digo como quiero que se comunique con el exterior
-apiVersion: v1
+apiVersion: apps/v1
 kind: Service
 metadata:
   name: nodejs-service
