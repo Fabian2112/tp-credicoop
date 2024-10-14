@@ -1,41 +1,37 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: appx-api-deployment
+  name: nodejs-app
   labels:
     app: appx-api
   spec:
     replicas: 2   # le digo cantidad de instancias
     selector:
       matchLabels:
-        app: appx-api
+        app: nodejs-app
     template:
       metadata:
         labels:
-          app: appx-api
+          app: nodejs-app
       spec:
         containers:
-        - name: appx-api-container
-          image: fabian2112/fabian2112-repo:appx-api-latest # le paso la imagen de mi repo
+        - name: nodejs-app
+          image: fabian2112/fabian2112-repo:nodejs-app:1.0 # le paso la imagen de mi repo
           ports:
-          - containerPort: 8080
-          env:
-          - name: MYSQL_HOST
-            value: mysql-service
-        imagePullSecrets:
-        - name: regcred   # secreto para acceder a docker-hub
+          - containerPort: 3000
+
 ---
 
 # en esta parte de servicios es donde al cluster cerrado le digo como quiero que se comunique con el exterior
 apiVersion: v1
 kind: Service
 metadata:
-  name: appx-api-service
+  name: nodejs-service
 spec:
   selector:
-    app: appx-api
+    app: nodejs-app
   ports:
     - protocol: TCP
-      port: 8080
-      targetPort: 8080
+      port: 3000
+      targetPort: 3000
   type: LoadBalancer
