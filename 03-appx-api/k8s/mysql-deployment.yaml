@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql
+spec:
+  replicas: 3   # le digo cantidad de instancias
+  selector:
+    matchLabels:
+      app: mysql
+  template:
+    metadata:
+      labels:
+        app: mysql
+    spec:
+      containers:
+      - name: mysql
+        image: fabian2112/fabian2112-repo:mysql:9.0 # le paso la imagen de mi repo
+        ports:
+        - containerPort: 3306
